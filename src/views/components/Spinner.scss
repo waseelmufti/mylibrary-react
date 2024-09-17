@@ -1,0 +1,49 @@
+.sk-double-bounce {
+    width:80px;
+    height:80px;
+    position:relative;
+    margin:40px auto
+  }
+  .sk-double-bounce .sk-child {
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background-color:#dbdbdb;
+    opacity:.6;
+    position:absolute;
+    top:0;
+    left:0;
+    animation:sk-doubleBounce 2s ease-in-out infinite
+  }
+  .sk-double-bounce .sk-double-bounce2 {
+    animation-delay:-1s
+  }
+  @keyframes sk-doubleBounce {
+    0%,
+    to {
+      transform:scale(0)
+    }
+    50% {
+      transform:scale(1)
+    }
+  }
+  #spinner {
+    position:absolute;
+    z-index:50;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    /*! display:none; */background-color:hsla(0,0%,0%,.95)
+  }
+  #spinner .spinner-container {
+    height:100vh;
+    display:flex;
+    align-items:center
+  }
+  .has-spinner-active {
+    overflow:hidden
+  }
+  .has-spinner-active #spinner {
+    display:block
+  }
