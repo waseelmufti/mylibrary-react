@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import NotificationContainer from '../components/dashboard/NotificationContainer';
 
 const Auth = () => {
     return (
@@ -7,6 +8,7 @@ const Auth = () => {
             <section className="section hero is-fullheight is-error-section">
                 <div className="hero-body">
                     <div className="container">
+                        <NotificationContainer />
                         <div className="columns is-centered">
                             <div className="column is-two-thirds-tablet is-half-desktop is-one-third-widescreen">
                                 <Outlet />

@@ -1,20 +1,38 @@
 import React from 'react';
-import { Form, redirect } from 'react-router-dom';
+import { Form, Navigate, redirect } from 'react-router-dom';
 import AuthService from "../../../services/AuthService";
-import { Interface } from 'readline';
+import useToken from '../../../hooks/useToken';
+import { useNotification } from '../../../stores/NotificationContext';
 
-
-export async function loginAction({request, params}: {request: Request, params: any}) {
-    const authService = AuthService();
-    const formData: FormData = await request.formData();
-
-    const response = authService.processLogin(formData);
-    console.log(formData, params);
-  
-    return null;
-    return redirect(`/dashboard`);
-}
 function Login() {
+    const {token, saveToken} = useToken();
+    const { addNotification } = useNotification();
+
+    const loginHandler:any = async(e: React.FormEvent<HTMLFormElement>) =>{
+        e.preventDefault();
+        const authService = AuthService();
+        const formData = new FormData(e.currentTarget);
+    
+        const response = await authService.processLogin(formData);
+        if(response.status === "login_success"){
+            addNotification("Login successful", "success");
+            saveToken(response.token);
+            return redirect(`/dashboard`);
+        }else if(response.message === "login_invalid"){
+            addNotification("Invalid credentials", "danger");
+        }else if(response.errors){
+            response.errors.map((error: any, idx: string) => {
+                return addNotification(Object.values(error)[0], "danger");
+            });
+        }else{
+            addNotification("Something went wrong", "danger");
+        }
+
+    }
+
+  if(token){
+    return <Navigate to="/dashboard" replace />;
+  }
     return (
         <>
             <div className="card has-card-header-background has-shadow">
@@ -27,7 +45,7 @@ function Login() {
                     </p>
                 </header>
                 <div className="card-content">
-                    <Form method='POST'>
+                    <Form method='POST' onSubmit={loginHandler}>
                         <div className="field"><label className="label">E-mail Address</label>
                             <div className="control is-clearfix">
                                 <input type="email" autoComplete="on" name="email" required autoFocus className="input" />

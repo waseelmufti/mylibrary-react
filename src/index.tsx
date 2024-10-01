@@ -5,8 +5,9 @@ import reportWebVitals from './reportWebVitals';
 import 'bulma/css/bulma.min.css';
 import "./styles/theme/main.min.css";
 import 'material-icons/iconfont/material-icons.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 import router from './routes';
+import NotificationProvider from './stores/NotificationContext';
 
 
 
@@ -15,7 +16,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <NotificationProvider>
+      <RouterProvider router={router} />
+    </NotificationProvider>
   </React.StrictMode>
 );
 

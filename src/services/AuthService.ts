@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { config } from "../config/config";
+import useToken from "../hooks/useToken";
 
 interface LoginFormData {
     email: string,
@@ -12,13 +13,13 @@ const AuthService = () => {
     
     const processLogin = async (formData: FormData) => {
         const url = baseUrl+"/login";
-        console.log(url);
 
         const loginFormData : LoginFormData = {
             email: formData.get('email') as string,
             password: formData.get("password") as string,
             remember_me: formData.get("remember_me") ? true : false
         }
+
         const response = await fetch(url, {
             headers: {
                 "Content-Type": "application/json",
