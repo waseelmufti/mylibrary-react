@@ -1,12 +1,12 @@
 import React from 'react';
 import { Form, Navigate, redirect } from 'react-router-dom';
 import AuthService from "../../../services/AuthService";
-import useToken from '../../../hooks/useToken';
 import { useNotification } from '../../../stores/NotificationContext';
+import { getToken, saveToken } from '../../../helpers/authHelper';
 
 function Login() {
-    const {token, saveToken} = useToken();
     const { addNotification } = useNotification();
+    const token = getToken();
 
     const loginHandler:any = async(e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();

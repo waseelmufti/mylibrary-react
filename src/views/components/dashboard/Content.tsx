@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import NotificationContainer from './NotificationContainer';
 
 function Content() {
   return (
@@ -41,6 +42,7 @@ function Content() {
     </div>
   </section>
   <section className="section is-main-section">
+  <NotificationContainer />
     <Outlet />
   </section>
     </>

@@ -7,11 +7,11 @@ const NotificationContainer : React.FC = () => {
     
   return (
     <>
-      <div className='section notifications-container is-clearfix is-relative' style={{"zIndex": "999"}}>
+      {notifications && <div className='section notifications-container is-clearfix is-relative' style={{"zIndex": "999"}}>
         {notifications.map(notification => (
             <Notification key={notification.id} {...notification} />
         ))}
-      </div>
+      </div>}
     </>
   )
 };

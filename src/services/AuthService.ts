@@ -1,6 +1,5 @@
-import { useState } from "react";
+
 import { config } from "../config/config";
-import useToken from "../hooks/useToken";
 
 interface LoginFormData {
     email: string,
@@ -28,7 +27,6 @@ const AuthService = () => {
             body: JSON.stringify(loginFormData)
         });
         const data = await response.json();
-        console.log(data);
         return data;
     }
 
