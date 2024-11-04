@@ -1,40 +1,79 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import AuthorService from '../../../services/AuthorService';
 import { useNotification } from '../../../stores/NotificationContext';
-import { redirect } from 'react-router-dom';
-import { error } from 'console';
+import { useNavigate } from 'react-router-dom';
+import { ApiResponse } from '../../../services/response';
 
-const AuthorsForm: React.FC = (props) => {
+export interface AuthorsFormProps {
+  selectedAuthor?: string | null,
+  mode?: string,
+  onClose?: () => void,
+}
+const AuthorsForm: React.FC<AuthorsFormProps> = (props) => {
+  const authorService = AuthorService();
   const { addNotification } = useNotification();
+  let navigate = useNavigate();
   const [inputs, setInputs] = useState({
     name: "",
     status: "true"
   });
 
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<string[]>([]);
+
+  useEffect( () => {
+    const fetchAuthor = async () => {
+      if(props.selectedAuthor && props.mode === "edit"){
+        try{
+          const author: any = await authorService.getAuthor(props.selectedAuthor);
+          console.log("author",author);
+          setInputs({
+            name: author.name,
+            status: author.status ? "true" : "false"
+          });
+
+        }catch(error){
+          console.log("error: ",error);
+        }
+      }     
+    }
+
+    fetchAuthor();
+  }, [props.selectedAuthor, props.mode]);
+
 
   const handleChange = (event: any) => {
+    console.log(event);
+    const target = event.target;
     const name = event.target.name;
-    console.log(event.target.type);
-    const value = event.target.type === 'checkbox' ? (event.target.checked ? true: false) : event.target.value;
+    const value = event.target.type === 'checkbox' ? (target.checked ? "true" : "false") : event.target.value;
     setInputs(values => ({...values, [name]: value}))
   }
 
   const handleSubmit = async(event: any) => {
     event.preventDefault();
-    console.log("inputs",inputs);
-    const response = await AuthorService().storeAuthor(inputs);
-    if(response == "create"){
-      addNotification("Author created successfully", "success");
-      return redirect(`/authors`);
-    }else if(response.errors){
-      setErrors(response.errors);
+    let response: ApiResponse | null = null;
+    
+    if(props.mode === "create"){
+      response = await AuthorService().storeAuthor(inputs);
+    }else if(props.mode === "edit"){
+      response = await authorService.updateAuthor(props.selectedAuthor, inputs);
     }
-    console.log("hello",response);
+
+    if(response === null) return false;
+
+    if("status" in response){
+      addNotification(`Author ${response.status} successfully`, "success");
+    }else if("errors" in response){
+      // Convert error object to an array of messages
+      const errorMessages = Object.values(response.errors);
+      setErrors(errorMessages); // Now setErrors expects an array of strings
+    }
+    props.onClose && props.onClose();
+    navigate('/authors', { replace: true });
 
   }
 
-  const errorList = errors && (errors.map((error, idx) => {
+  const errorList = errors && (errors.map((error: any, idx: string | number) => {
     const err = Object.values(error)[0];
     return(<li key={idx} className="has-text-danger">
       {typeof err === 'string' || typeof err === 'number' ? err : JSON.stringify(err)} 
@@ -78,7 +117,7 @@ const AuthorsForm: React.FC = (props) => {
                   <label className="switch is-rounded">
                     <input type="checkbox" name="status" true-value="true"
                     value="true"
-                    onChange={handleChange} checked={inputs.status == "true" ? true: false}/>
+                    onChange={handleChange} checked={inputs.status === "true" ? true: false}/>
                     <span className="check is-info"></span>
                     <span className="control-label"></span>
                   </label>
@@ -98,8 +137,8 @@ const AuthorsForm: React.FC = (props) => {
                           </button>
                         </div>
                         <div className="control">
-                          <button type="button" className="button is-info is-outlined">
-                            <span>Reset </span>
+                          <button type="button" className="button is-info is-outlined" onClick={props.onClose}>
+                            <span>Cancel </span>
                           </button>
                         </div>
                       </div>

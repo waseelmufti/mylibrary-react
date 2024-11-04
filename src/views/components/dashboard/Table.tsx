@@ -2,11 +2,19 @@ import React from 'react'
 
 interface TableProps {
     tableHeading: string | null;
-    children: any
+    children: any,
+    totalPages: number,
+    currentPage: number,
+    onPageChange?: (page: number) => void;
 }
 
 
-const Table : React.FC<TableProps> = ({tableHeading, children}) => {
+const Table : React.FC<TableProps> = ({tableHeading, children, totalPages, currentPage, onPageChange}) => {
+    const pageNumbers = [];
+    for (let i = 0; i < totalPages; i++) {
+        pageNumbers.push(i);
+    }
+
     
   return (
     <>
@@ -32,15 +40,22 @@ const Table : React.FC<TableProps> = ({tableHeading, children}) => {
                             <div className="level-left">
                                 <div className="level-item">
                                     <div className="buttons has-addons">
-                                        <button type="button" className="button is-active">1</button>
-                                        <button type="button" className="button">2</button>
-                                        <button type="button" className="button">3</button>
+                                    {pageNumbers.map(number => (
+                                            <button 
+                                                key={number}
+                                                type="button" 
+                                                className={`button ${number === currentPage ? 'is-active' : ''}`}
+                                                onClick={() => onPageChange && onPageChange(number)}
+                                            >
+                                                {number+1}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
                             <div className="level-right">
                                 <div className="level-item">
-                                    <small>Page 1 of 3</small>
+                                    <small>Page {currentPage+1} of {totalPages}</small>
                                 </div>
                             </div>
                         </div>

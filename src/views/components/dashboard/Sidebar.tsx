@@ -54,8 +54,8 @@ function Sidebar() {
   }
 
   function getLinkItem(item: any, key: number){
-    return (<li key={key}>
-      <Link to={item.to} className="router-link-active has-icon" key={key}>
+    return (<li key={`menu-item-${key}`}>
+      <Link to={item.to} className="router-link-active has-icon">
           <span className="icon"><i className={item.icon}></i></span>
           <span className="menu-item-label">{item.label}</span>
       </Link>
@@ -63,14 +63,14 @@ function Sidebar() {
   }
   function getSubmenu(item: any, key: number){
     const subitems = item.items.map((subItem: any, idx: number) => {
-      return (<li key={idx}>
-        <Link to={subItem.to} key={idx}>
+      return (<li key={`sub-item-${idx}`}>
+        <Link to={subItem.to}>
             <span>{subItem.label}</span>
         </Link>
     </li>);
     });
-    return (<li key={key}>
-        <a className="has-icon has-dropdown-icon" onClick={dropdownToggle} key={key}>
+    return (<li key={`dropdown-item-${key}`}>
+        <a className="has-icon has-dropdown-icon" onClick={dropdownToggle}>
             <span className="icon"><i className={item.icon}></i></span>
             <span className="menu-item-label">{item.label}</span>
             <div className="dropdown-icon">
@@ -81,7 +81,7 @@ function Sidebar() {
     </li>);
   }
   const menu = menuItems.map((menu: any, index: number) => {
-    const menuLable = (<li key={index}><p className="menu-label" key={index}>{menu.menuLable}</p></li>);
+    const menuLable = (<li key={`menu-lable-${index}`}><p className="menu-label">{menu.menuLable}</p></li>);
     const menuList = menu.menuList.map((menuItem: any, idx: number) => {
       let item = null;
       if (menuItem.type === "dropdown"){

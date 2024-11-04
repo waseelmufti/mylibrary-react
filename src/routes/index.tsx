@@ -40,8 +40,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: "",
-                        element: <AuthorsList />,
-                        loader: authorsLoader
+                        element: <AuthorsList /> 
                     },
                     {
                         path: "create",

@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
 export interface ModalProps {
-    selectedAuthor?: number | null,
-    mode: string,
     onOpen?: () => void,
     onClose?: () => void,
     children: any
@@ -26,7 +24,7 @@ const Modal: React.FC<ModalProps> = (props) => {
                     <p className="modal-card-title">Confirm action</p>
                     <button className="delete jb-modal-close" aria-label="close" onClick={closeHandler}></button>
                 </header> */}
-                <section className="modal-card-body">
+                <section className="modal-card-body p-0">
                     {props.children}
                 </section>
                 {/* <footer className="modal-card-foot">
